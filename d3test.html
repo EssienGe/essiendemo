@@ -1,0 +1,69 @@
+<html>
+	<head>
+		<style>
+
+		.node circle {
+		  fill: #fff;
+		  stroke: steelblue;
+		  stroke-width: 1.5px;
+		}
+
+		.node {
+		  font: 20px sans-serif;
+		}
+
+		.link {
+		  fill: none;
+		  stroke: #ccc;
+		  stroke-width: 2.5px;
+		}
+
+		</style>
+		<script src="http://d3js.org/d3.v3.min.js"></script>
+		
+	</head>
+	<body>
+	<script>
+			var width = 400; 
+			var height = 800; 
+			 
+			var svg = d3.select("body")   
+				.append("svg")      
+				.attr("width", width)       
+				.attr("height", height);
+			var nodes=[{name:'aaa',x:100,y:100},{name:'bbbbb',x:100,y:700},{name:'cccccccc',x:200,y:600}];
+			var links=[];
+			for(var i in nodes){
+				links[i]={};
+				links[i].source={};
+				links[i].target={}
+				links[i].source.x=nodes[i].x;
+				links[i].source.y=nodes[i].y;
+				links[i].source.name=nodes[i].name;
+				links[i].target.x=nodes[(i+1)%nodes.length].x;
+				links[i].target.y=nodes[(i+1)%nodes.length].y;
+				links[i].target.name=nodes[(i+1)%nodes.length].name;
+				if(links[i].source.y>links[i].target.y){links[i].source.y-=25;links[i].target.y+=15;}
+				else{links[i].source.y+=15;links[i].target.y-=25;}
+			}
+			var diagonal=d3.svg.diagonal();
+			var node=svg.selectAll('.node')
+				.data(nodes)
+				.enter()
+				.append("g")
+				.attr("class","node")
+				.attr("transform",function(d){return "translate("+d.x+","+d.y+")"})
+			var link=svg.selectAll('.link')
+				.data(links)
+				.enter()
+				.append("path")
+				.attr("class","link")
+				.attr("d",diagonal)
+				.attr("marker-end","url(#arrow)");
+
+			node.append("text")
+				.text(function(d){return d.name})
+				.attr("dx",function(d){return -d.name.length*10/2})
+		</script>
+	</body>
+</html>
